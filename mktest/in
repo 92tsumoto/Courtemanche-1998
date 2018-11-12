@@ -1,0 +1,77 @@
+/* cell type */
+/* celltype == 0 --> Endo */
+/* celltype == 1 --> Epi */
+/* celltype == 2 --> Mid */
+1
+
+/* Base cycel length */
+//500
+1000
+//2000
+//4000
+
+/* ndis */
+//0.002           // for 1ms pulse width with BCL500
+0.001         // for 1ms pulse width with BCL1000
+//0.0005        // for 1ms pulse width with BCL2000
+
+/* Istim */
+-40.0	
+//0.0	
+
+/* number of data */
+1
+
+/* line width */
+2
+
+/* x1, y1 */
+-87.84       // Vm            = x[0]
+0.002908     // m             = x[1]
+0.9649     	 // h             = x[2]
+0.9775     	 // j             = x[3]
+0.03043   	 // a             = x[4]
+0.9992       // i             = x[5]
+0.004966     // ua            = x[6]
+0.9986       // ui            = x[7]
+0.00003296   // xr            = x[8]
+0.01869      // xs            = x[9]
+0.0001367    // d             = x[10]
+0.9996       // f             = x[11]
+0.7755       // fca           = x[12]
+0.0          // u             = x[13]
+1.0          // v             = x[14]
+0.9992       // w             = x[15]
+11.17      	 // Na_i          = x[16]
+139.0        // K_i           = x[17]
+0.0001013    // Ca_i          = x[18]
+1.488        // Ca_NSR        = x[19]
+1.488        // Ca_JSR        = x[20]
+
+/* direction of time */
+1
+/* end time. 0.0 = nolimit of integration */ 
+0
+
+/* dIstim */
+0.1
+
+1		/* number of period */
+200	    /* strip for integral */
+1		/* poincare flag 0 --- poincare/1 --- orbit */
+0		/* write file 0 --- not write/1 --- write */
+0		/* write0 0:non out, 1:out */
+0		/* if 1 then period is PI*/
+0       /* data output swithc; if 1 then data out*/
+1       /* screen output swithc; if 1 then data out*/
+0       /* current data output; if 1 then data out*/
+0       /* if 1 then debug */
+
+100 600 100 600     /* graph location */
+-100 60 -50 400	/* scaling */
+30 50 1 1     /* label strip & interval */
+1 1                 /* floating point */
+1                   /* axis/grid */
+-sony-fixed-medium-r-normal--24-170-100-100-c-120-iso8859-1 /* font */
+-212 -460 -40 -288      /* arrow */
+1                   /* command */
