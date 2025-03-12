@@ -3,7 +3,6 @@
 void function(double x[],double f[],double t)
 {
 
-	int i;
 	comp_reversal_potential(x);
 	comp_ina(x);
 	comp_ik1(x);
@@ -13,56 +12,55 @@ void function(double x[],double f[],double t)
 	comp_iks(x);
 	comp_ical(x);
 	comp_inak(x);
-	comp_ikb(x);
+	comp_inaca(x);
 	comp_icab(x);
 	comp_inab(x);
-	comp_inaca(x);
 	comp_ipca(x);
 	comp_jrel(x);
 	comp_jup(x);
 	comp_jtr(x);
 	comp_concentration(x);
 	
-	var.Ina_total = ina.fast + inab.na + 3.0*inak.nak + 3.0*ncx.j;
-	var.Ik_total = ito.ik + ikur.ik + ikr.ik + iks.ik + ik1.ik + ikb.k - 2.0*inak.nak + var.Istim;
-	var.Ica_total = ipca.ca + ical.ica + icab.ca - 2.0*ncx.j;
+	JNanet = INaf + IbNa + 3.0*INaK + 3.0*INCX;
+	JKnet  = Ito + Ikur + Ikr + Iks + Ik1 - 2.0*INaK + Istim;
+	JCanet = IpCa + Ical + IbCa - 2.0*INCX;
 
-	var.Itotal = ina.fast + ito.ik + ikur.ik + ikr.ik + iks.ik + ik1.ik + ical.ica
-					+ ncx.j + inak.nak + inab.na + icab.ca + ikb.k + ipca.ca + var.Istim;
-
-	f[0] = -var.Itotal;
-	//Fast sodium current
-	f[1] = (ina.mss - x[1])/ina.taum; // m
-	f[2] = (ina.hss - x[2])/ina.tauh; // h_fast
-	f[3] = (ina.jss - x[3])/ina.tauj; // j
-	//Transient outward current
-	f[4] = (ito.ass - x[4])/ito.taua;
-	f[5] = (ito.iss - x[5])/ito.taui;
-	//Transient outward current
-	f[6] = (ikur.ass - x[6])/ikur.taua;
-	f[7] = (ikur.iss - x[7])/ikur.taui;
-	// Ikr
-	f[8] = (ikr.xrss - x[8])/ikr.tauxr;
-	// Iks
-	f[9] = (iks.xsss - x[9])/iks.tauxs;
+	Itotal = INaf + Ito + Ikur + Ikr + Iks + Ik1 + Ical + INaK + + INCX + IbNa + IbCa + IpCa;
+	
+	// Vm
+	f[0] = -(Itotal+Istim);
+	// INa
+	f[1] = (mss - x[1])/taum; // m
+	f[2] = (hss - x[2])/tauh; // h_fast
+	f[3] = (jss - x[3])/tauj; // j
+	// Ito
+	f[4] = (ass - x[4])/taua;
+	f[5] = (iss - x[5])/taui;
+	// IKur
+	f[6] = (ua_ss - x[6])/tau_ua;
+	f[7] = (ui_ss - x[7])/tau_ui;
+	// IKr
+	f[8] = (xrss - x[8])/tauxr;
+	// IKs
+	f[9] = (xsss - x[9])/tauxs;
 	// LTCC
-	f[10] = (ical.dss - x[10])/ical.taud;
-	f[11] = (ical.fss - x[11])/ical.tauf;
-	f[12] = (ical.fcass - x[12])/ical.taufca;
+	f[10] = (dss   - x[10])/taud;
+	f[11] = (fss   - x[11])/tauf;
+	f[12] = (fcass - x[12])/taufca;
 	// Jrel
-	f[13] = (jrel.uss - x[13])/jrel.tauu; 
-	f[14] = (jrel.vss - x[14])/jrel.tauv; 
-	f[15] = (jrel.wss - x[15])/jrel.tauw;
+	f[13] = (uss - x[13])/tauu; 
+	f[14] = (vss - x[14])/tauv; 
+	f[15] = (wss - x[15])/tauw;
 	// [Na]i
-	f[16] = -var.Ina_total*var.vr1;
+	f[16] = -JNanet*Acap/F/Vmyo;
 	// [K]i
-	f[17] = -var.Ik_total*var.vr1;
+	f[17] = -JKnet*Acap/F/Vmyo;
 	// [Ca]i
-	f[18] = (-var.Ica_total*var.vr2 + (jup.leak-jup.ca)*var.vr3 + jrel.ca*var.vr4)/buf.b2;
+	f[18] = (-JCanet*Acap/2.0/F + (Jleak - Jup)*Vnsr + Jrel*Vjsr)/Vmyo/B2;
 	// [Ca]nsr
-	f[19] = jup.ca - jup.leak - jtr.ca*var.vr5;
+	f[19] = Jup - Jleak - Jtr*Vjsr/Vnsr;
 	// [Ca]jsr
-	f[20] = (jtr.ca-jrel.ca)/buf.b3;
+	f[20] = (Jtr - Jrel)/B3;
 
 	//for(i=0;i<NN;i++){
 	//	printf("f[%d]=%e\n",i,f[i]);

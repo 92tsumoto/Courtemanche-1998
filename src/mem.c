@@ -7,81 +7,80 @@ void initial_mem()
 {
 
 	// ina_fast
-	ina.Tmss=(Number *)calloc(VNMAX,sizeof(Number));
-	ina.Ttaum=(Number *)calloc(VNMAX,sizeof(Number));
-	ina.Thss=(Number *)calloc(VNMAX,sizeof(Number));
-	ina.Ttauh=(Number *)calloc(VNMAX,sizeof(Number));
-	ina.Tjss=(Number *)calloc(VNMAX,sizeof(Number));
-	ina.Ttauj=(Number *)calloc(VNMAX,sizeof(Number));
-	if( ina.Tmss==NULL || ina.Ttaum==NULL || ina.Thss==NULL || ina.Ttauh==NULL || ina.Tjss==NULL || ina.Ttauj==NULL) exit(1);
+	Tmss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttaum = (Number *)calloc(VNMAX,sizeof(Number));
+	Thss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttauh = (Number *)calloc(VNMAX,sizeof(Number));
+	Tjss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttauj = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Tmss==NULL || Ttaum==NULL || Thss==NULL || Ttauh==NULL || Tjss==NULL || Ttauj==NULL) exit(1);
 	
 	// ik1
-	ik1.Tk1ss=(Number *)calloc(VNMAX,sizeof(Number));
-	if( ik1.Tk1ss == NULL ) exit(1);
+	Tk1ss = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Tk1ss == NULL ) exit(1);
 	
 	// ito
-	ito.Tass=(Number *)calloc(VNMAX,sizeof(Number));
-	ito.Ttaua=(Number *)calloc(VNMAX,sizeof(Number));
-	ito.Tiss=(Number *)calloc(VNMAX,sizeof(Number));
-	ito.Ttaui=(Number *)calloc(VNMAX,sizeof(Number));
-	if( ito.Tass==NULL || ito.Ttaua==NULL || ito.Tiss==NULL || ito.Ttaui==NULL) exit(1);
+	Tass  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttaua = (Number *)calloc(VNMAX,sizeof(Number));
+	Tiss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttaui = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Tass==NULL || Ttaua==NULL || Tiss==NULL || Ttaui==NULL) exit(1);
 	
 	// ikur
-	ikur.Tass=(Number *)calloc(VNMAX,sizeof(Number));
-	ikur.Ttaua=(Number *)calloc(VNMAX,sizeof(Number));
-	ikur.Tiss=(Number *)calloc(VNMAX,sizeof(Number));
-	ikur.Ttaui=(Number *)calloc(VNMAX,sizeof(Number));
-	ikur.Tgkur=(Number *)calloc(VNMAX,sizeof(Number));
-	if( ikur.Tass==NULL || ikur.Ttaua==NULL || ikur.Tiss==NULL || ikur.Ttaui==NULL || ikur.Tgkur==NULL) exit(1);
+	Tua_ss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttau_ua = (Number *)calloc(VNMAX,sizeof(Number));
+	Tui_ss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttau_ui = (Number *)calloc(VNMAX,sizeof(Number));
+	Tgkur   = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Tua_ss==NULL || Ttau_ua==NULL || Tui_ss==NULL || Ttau_ui==NULL || Tgkur==NULL) exit(1);
 	
 	// ikr
-	ikr.Txrss=(Number *)calloc(VNMAX,sizeof(Number));
-	ikr.Ttauxr=(Number *)calloc(VNMAX,sizeof(Number));
-	ikr.Trkr=(Number *)calloc(VNMAX,sizeof(Number));
-	if( ikr.Txrss==NULL || ikr.Ttauxr==NULL  || ikr.Trkr==NULL ) exit(1);
+	Txrss   = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttau_xr = (Number *)calloc(VNMAX,sizeof(Number));
+	Trkr    = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Txrss==NULL || Ttau_xr==NULL  || Trkr==NULL ) exit(1);
 
 	// iks
-	iks.Txsss=(Number *)calloc(VNMAX,sizeof(Number));
-	iks.Ttauxs=(Number *)calloc(VNMAX,sizeof(Number));
-	if( iks.Txsss==NULL || iks.Ttauxs==NULL ) exit(1);
+	Txsss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttauxs = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Txsss==NULL || Ttauxs==NULL ) exit(1);
 
 	// ical
-	ical.Tdss=(Number *)calloc(VNMAX,sizeof(Number));
-	ical.Ttaud=(Number *)calloc(VNMAX,sizeof(Number));
-	ical.Tfss=(Number *)calloc(VNMAX,sizeof(Number));
-	ical.Ttauf=(Number *)calloc(VNMAX,sizeof(Number));
-	if( ical.Tdss==NULL || ical.Ttaud==NULL || ical.Tfss==NULL || ical.Ttauf==NULL ) exit(1);
+	Tdss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttaud = (Number *)calloc(VNMAX,sizeof(Number));
+	Tfss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttauf = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Tdss==NULL || Ttaud==NULL || Tfss==NULL || Ttauf==NULL ) exit(1);
 
 	// inak
-	inak.Tknai=(Number *)calloc(VNMAX,sizeof(Number));
-	inak.Tknao=(Number *)calloc(VNMAX,sizeof(Number));
-	if( inak.Tknai==NULL || inak.Tknao==NULL ) exit(1);
+	Tknai = (Number *)calloc(VNMAX,sizeof(Number));
+	Tknao = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Tknai==NULL || Tknao==NULL ) exit(1);
 	
 	// inaca
-	ncx.Thca=(Number *)calloc(VNMAX,sizeof(Number));
-	ncx.Thna=(Number *)calloc(VNMAX,sizeof(Number));
-	if( ncx.Thca==NULL || ncx.Thna==NULL ) exit(1);
+	Thca = (Number *)calloc(VNMAX,sizeof(Number));
+	Thna = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Thca==NULL || Thna==NULL ) exit(1);
 	
 	// jrel
-	jrel.Twss=(Number *)calloc(VNMAX,sizeof(Number));
-	jrel.Ttauw=(Number *)calloc(VNMAX,sizeof(Number));
-	if( jrel.Twss==NULL || jrel.Ttauw==NULL ) exit(1);
+	Twss  = (Number *)calloc(VNMAX,sizeof(Number));
+	Ttauw = (Number *)calloc(VNMAX,sizeof(Number));
+	if( Twss==NULL || Ttauw==NULL ) exit(1);
 }
 
 
 void closed_mem()
 {
 
-	free(ina.Tmss); free(ina.Ttaum); free(ina.Thss); free(ina.Ttauh); free(ina.Tjss); free(ina.Ttauj);
-	free(ik1.Tk1ss);
-	free(ito.Tass); free(ito.Ttaua); free(ito.Tiss); free(ito.Ttaui);
-	free(ikur.Tass); free(ikur.Ttaua); free(ikur.Tiss); free(ikur.Ttaui); free(ikur.Tgkur);
-	free(ikr.Txrss); free(ikr.Ttauxr); free(ikr.Trkr);
-	free(iks.Txsss); free(iks.Ttauxs);
-	free(iks.Txsss); free(iks.Ttauxs);
-	free(ical.Tdss); free(ical.Ttaud); free(ical.Tfss); free(ical.Ttauf);
-	free(inak.Tknai); free(inak.Tknao);
-	free(jrel.Twss); free(jrel.Ttauw);
+	free(Tmss); free(Ttaum); free(Thss); free(Ttauh); free(Tjss); free(Ttauj);
+	free(Tk1ss);
+	free(Tass); free(Ttaua); free(Tiss); free(Ttaui);
+	free(Tua_ss); free(Ttau_ua); free(Tui_ss); free(Ttau_ui); free(Tgkur);
+	free(Txrss); free(Ttau_xr); free(Trkr);
+	free(Txsss); free(Ttauxs);
+	free(Tdss); free(Ttaud); free(Tfss); free(Ttauf);
+	free(Tknai); free(Tknao);
+	free(Twss); free(Ttauw);
 
 }
 

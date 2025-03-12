@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "syspara.h"
 
-FILE *fopen(), *fpin, *fp0, *fp1, *fp2, *fp3;
+FILE *fpin, *fp0, *fp1, *fp2, *fp3;
 FILE *fp4, *fp5, *fp6, *fp7, *fp8, *fp9;
 int mode = 1;
 int P = 2;
@@ -12,9 +12,7 @@ int beats = 30;
 
 typedef double Number;
 
-main(argc,argv)
-int argc;
-char **argv;
+int main(int argc, char **argv)
 {
 	int i,w;
 	int ii=0;
@@ -24,7 +22,8 @@ char **argv;
 	double time=0.0;
 	double ttime=0.0;
 	double h;
-	double v_old,dvdt,dvdt_new;
+	//double v_old,dvdt,dvdt_new;
+	double v_old,dvdt_new;
 	char *tmpname;
 	char cmd[BUFSIZ];
 	double tend;
@@ -135,10 +134,10 @@ char **argv;
 		// initial values input.
 		val_consts(fp1);
 		printf("exit consts\n");
-		printf("cell volume=%e\n",M_PI*var.a*var.a*var.length);
-		printf("Vcell=%e\n",var.vcell);
-		printf("Cm=%e\n",var.acap);
-		printf("Istim=%lf\n",var.Istim_base);
+		printf("cell volume=%e\n",M_PI*radius*radius*length);
+		printf("Vcell=%e\n",Vcell);
+		printf("Cm=%e\n",Acap);
+		printf("Istim=%lf\n",Istim_base);
 				
 		// initial values input.
 		initial_mem();
@@ -163,7 +162,7 @@ char **argv;
 			for (j = 0; j< (int)tt; j++){
 				t = h*(double)j;
 				v_old=x[0];
-				var.Istim = var.Istim_base;
+				Istim = Istim_base;
 
 				if (var.deb==1){
 					printf("%d %lf %lf %lf %lf\n",var.beat,apd,toneapd,ttwoapd,rmbp);
@@ -171,12 +170,13 @@ char **argv;
 					printf("%lf %lf %f %f %e ", x[5],x[6],x[7],x[8],x[9]);
 					printf("%lf %e %lf %lf %lf ", x[10],x[11],x[12],x[13],x[14]);
 					printf("%lf %e %lf %lf %lf %lf\n", x[15],x[16],x[17],x[18],x[19],x[20]);
-					printf("time=%lf,Istim=%lf\n",time,var.Istim);
-					printf("dvdtmax[%d]=%lf\n",var.beat,dvdt);
-					printf("ENa=%lf, EK=%lf ECa=%lf\n", var.Ena,var.Ek,var.Eca);
+					printf("time=%lf,Istim=%lf\n",time,Istim);
+					printf("dvdtmax[%d]=%lf\n",var.beat,dvdtmax);
+					printf("ENa=%lf, EK=%lf ECa=%lf\n", ENa,EK,ECa);
 				}
 
-				eular(NN,h,x,t);
+				//eular(NN,h,x,t);
+				runge(NN,h,x,t);
 				
 				dvdt_new = (x[0]-v_old)/h;
 				if (x[0] > vmax) vmax = x[0];
@@ -186,7 +186,7 @@ char **argv;
 				}
 				if (dvdt_new < 0.0 && x[0] >= (vmax -0.9*(vmax-rmbp))) ttwoapd = time;
 				
-				if (var.pflag) orbit(&mode,x,dvdt_new);
+				if (var.pflag) orbit(&mode,x);
 				if(var.pswitch == 1){
 					if (j%10==0){
 						data_out(fp2,time,x);
@@ -203,7 +203,7 @@ char **argv;
 			for (j = 0; j< (int)ttt; j++){
 				t = h*(double)j;
 				v_old=x[0];
-				var.Istim = 0.0;
+				Istim = 0.0;
 
 				if (var.deb==1){
 					printf("%d %lf %lf %lf %lf\n",var.beat,apd,toneapd,ttwoapd,rmbp);
@@ -211,12 +211,13 @@ char **argv;
 					printf("%lf %lf %f %f %e ", x[5],x[6],x[7],x[8],x[9]);
 					printf("%lf %e %lf %lf %lf ", x[10],x[11],x[12],x[13],x[14]);
 					printf("%lf %e %lf %lf %lf %lf\n", x[15],x[16],x[17],x[18],x[19],x[20]);
-					printf("time=%lf,Istim=%lf\n",time,var.Istim);
-					printf("dvdtmax[%d]=%lf\n",var.beat,dvdt);
-					printf("ENa=%lf, EK=%lf ECa=%lf\n", var.Ena,var.Ek,var.Eca);
+					printf("time=%lf,Istim=%lf\n",time,Istim);
+					printf("dvdtmax[%d]=%lf\n",var.beat,dvdtmax);
+					printf("ENa=%lf, EK=%lf ECa=%lf\n", ENa,EK,ECa);
 				}
 
-				eular(NN,h,x,t);
+				//eular(NN,h,x,t);
+				runge(NN,h,x,t);
 				
 				dvdt_new = (x[0]-v_old)/h;
 				if (x[0] > vmax) vmax = x[0];
@@ -226,7 +227,7 @@ char **argv;
 				}
 				if (dvdt_new < 0.0 && x[0] >= (vmax -0.9*(vmax-rmbp))) ttwoapd = time;
 				
-				if (var.pflag) orbit(&mode,x,dvdt_new);
+				if (var.pflag) orbit(&mode,x);
 				if(var.pswitch == 1){
 					if (j%10==0){
 						data_out(fp2,time,x);
@@ -257,8 +258,8 @@ char **argv;
 				}
 			}
 
-			draw_p(&mode,P,x,dvdt);
-			mouse(&mode,x,dvdt);
+			draw_p(&mode,P,x);
+			mouse(&mode,x);
 			if (fabs(time) > tend &&  tend != 0.0) break;
 			var.beat++;
 

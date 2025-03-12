@@ -23,13 +23,13 @@ void eventloop(FILE *fp1,int *mode, int *P,double m[])
 				}
 				break;
 			case 'A':
-				var.Istim_base += var.dIstim;
-				printf("Istim = %lf\n",var.Istim_base);
+				rategk1 += dIstim;
+				printf("GK1 = %lf\n",rategk1*Gk1);
 				fflush(stdout);
 				break;
 			case 'a':
-				var.Istim_base -= var.dIstim;
-				printf("Istim = %lf\n",var.Istim_base);
+				rategk1 -= dIstim;
+				printf("GK1 = %lf\n",rategk1*Gk1);
 				fflush(stdout);
 				break;
 			case 'f':
@@ -55,17 +55,19 @@ void eventloop(FILE *fp1,int *mode, int *P,double m[])
 				break;
 			case 's':
 				printf("\nStatus\n");
-				//printf("k2 = %lf --> v\n",var.k2);
 				printf("%lf %lf %f %f %f\n", m[0],m[1],m[2],m[3],m[4]);
 				printf("%lf %lf %f %f %f\n", m[5],m[6],m[7],m[8],m[9]);
 				printf("%lf %lf %f %f %f\n", m[10],m[11],m[12],m[13],m[14]);
 				printf("%lf %lf %f %f %f %f\n", m[15],m[16],m[17],m[18],m[19],m[20]);
 				fflush(stdout);
+				var.pswitch = 1 - var.pswitch;
+				if(var.pswitch == 1){
+					printf("Current data output\n");
+				} else {
+					printf("Current data output stop\n");
+				}
 				break;
 			case '1':
-				//fprintf(fp1,"%10.8lf\n",var.vd);
-				//fprintf(fp1,"%10.8lf\n",var.k1);
-				//fprintf(fp1,"%10.8lf\n",var.k2);
 				for(i=0;i<NN;i++){fprintf(fp1,"%10.8lf\n",m[i]);}
 				fflush(fp1);
 				printf("stored in para.out\n");

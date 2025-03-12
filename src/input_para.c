@@ -5,10 +5,10 @@ void input_para(FILE *fpin)
 {
 	int i,ii;
 
-	fscanf(fpin,"%d",&var.celltype);
+	fscanf(fpin,"%d",&celltype);
 	fscanf(fpin,"%lf",&var.BCL);
 	fscanf(fpin,"%lf",&var.ndis);
-	fscanf(fpin,"%lf",&var.Istim_base);
+	fscanf(fpin,"%lf",&Istim_base);
 	fscanf(fpin,"%d",&var.datas);
 	for (ii = 0; ii < var.datas; ii++){
 		fscanf(fpin, "%d", &var.line_wid[ii]);
@@ -19,7 +19,9 @@ void input_para(FILE *fpin)
 		fscanf(fpin, "%lf", &var.tsign[ii]);
 		fscanf(fpin, "%lf", &var.tend[ii]);
 	}
-	fscanf(fpin,"%lf",&var.dIstim);
+	fscanf(fpin,"%lf",&rategk1);
+	printf("rategk1=%lf\n",rategk1);
+	fscanf(fpin,"%lf",&dIstim);
 	fscanf(fpin,"%d",&var.l);
 	fscanf(fpin,"%d",&var.m);
 	fscanf(fpin,"%d",&var.pflag);

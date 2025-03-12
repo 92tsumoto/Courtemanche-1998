@@ -12,17 +12,46 @@
 #define BUF 100
 #define NUM 60
 
-//#define R 8314.472		// J/mmol/K
+//#define R 8.314462			// J/mol/K
 //#define F 96485.33771638995	// C/mol
-//#define T 310.0		// K
-#define R 8.3143	// J/mol/K
-#define F 96.4867	// C/mmol
+//#define T 310.0				// K
+#define R 8314300000000000	// 8.3143E+15 (aJ/mM/K)
+#define F 96486700000000000	// 96.4867E+15 (fC/mM)
 #define T 310.0		// K
 
-#define dvm 5
-#define Emax 200
-#define Emin -200
+#define dvm 50
+#define Emax 2000
+#define Emin -2000
 #define VNMAX (Emax-Emin)*dvm+1
+
+	// An invariant constant
+	double RTF,FRT;
+	
+	// Cell tupe
+	int celltype;
+
+	// Ion Valences 
+	double zna,zk,zca;
+
+	// Reversal potential
+	double ENa,EK,EKs,ECa;
+	double prnak;
+			
+	// Q10
+	double K_Q10;	
+
+	// Extracellular ion concentrations
+	double Nao,Ko,Cao;
+
+	// Cell Geometry
+	double length,radius,Vcell,Ageo,Acap;
+	double Vmyo,Vsr,Vnsr,Vjsr,Vcleft,Vss;
+	double Vr1,Vr2,Vr3,Vr4,Vr5,vr6,vr7,vr8;
+
+	// Base Currnt Stimulus
+	double Istim_base;
+    double Istim;
+	double dIstim;
 
 struct varstruct {
 
@@ -30,59 +59,9 @@ struct varstruct {
     int line_wid[NUM];
 	
 	int n;
-    double Istim;
-	double dIstim;
-
-	// An invariant constant
-	double RTonF,RTon2F;
-
-	// Cell tupe
-	int celltype;
-
-	// Cell Geometry
-	double length,a,vcell,ageo,acap;
-	double vmyo,vmito,vsr,vnsr,vjsr,vcleft,vss;
-	double vr1,vr2,vr3,vr4,vr5,vr6,vr7,vr8;
-
-	// Ion Valences 
-	double zna,zk,zca;
 
 	// time ratio
 	double ndis;
-
-	// Q10
-	double K_Q10;	
-
-	// Reversal potential
-	double Ena,Ek,Eks,Eca;
-	double prnak;
-			
-	// Sodium-Calcium Exchanger V-S
-	double hca,hna;
-	double *Thca,*Thna;
-	double kna1,kna2,kna3,kasym;
-	double omega_na,omega_ca,omega_naca;
-	double kca_on,kca_off,qna,qca;
-	double km_ca_act;
-	double inaca_i,inaca_ss,inaca;
-	double Gnaca;
-
-	// Total Ion currents 
-	double Ina_total;
-	double Ik_total;
-	double Ica_total;
-	double Itotal;
-
-	// Ion concentration and Buffers
-	double cmdnmax,kmcmdn;
-	double trpnmax,kmtrpn;
-	double csqnmax,kmcsqn;
-
-	// Extracellular ion concentrations
-	double nao,ko,cao;
-
-	// Base Currnt Stimulus
-	double Istim_base;
 
 	// test variable
 	double dt,dvdt;
@@ -105,161 +84,108 @@ struct varstruct {
 
 } var;
 
-// Fast and Late sodium currnets
-struct inastruct {
+// Total Ion currents 
+	double JNanet,JKnet,JCanet;
+	double Itotal;
 
-	double Gna_fast,fast;
+// Fast and Late sodium currnets
+	double Gnaf,INaf,ENa;
 	double *Tmss,*Ttaum,*Thss,*Ttauh,*Tjss,*Ttauj;
 	double mss,taum,hss,tauh,jss,tauj;
 
-} ina;
-
-// Transient Outward Current (Ito)
-struct itostruct {
-
-	double ik,Gto;
-	double ass,taua,iss,taui;
-	double *Tass,*Ttaua,*Tiss,*Ttaui;
-
-} ito;
-
-// Transient Outward Current (Ito)
-struct ikurstruct {
-
-	double ik,gkur;
-	double ass,taua,iss,taui;
-	double *Tass,*Ttaua,*Tiss,*Ttaui;
-	double *Tgkur;
-
-} ikur;
-
-// L-type Calcium channel current (IcaL)
-struct icalstruct {
-
-	double dss,taud,fss,tauf,fcass,taufca;
-	double *Tdss,*Ttaud,*Tfss,*Ttauf;
-	double ica,gca;
-
-} ical;
-
-// Rapid activating potassium current (Ikr)
-struct ikrstruct {
-
-	double ik,Gkr,rategkr;
-	double xr,xrss,tauxr,rkr;
-	double *Txrss,*Ttauxr,*Trkr;
-
-} ikr;
-
-// Slowlactivating potassium current (Iks)
-struct iksstruct {
-
-	double ik,Gks;
-	double xsss,tauxs;
-	double *Txsss,*Ttauxs;
-		
-} iks;
-
 // Inward rectifier potassium current (Ik1)
-struct ik1struct {
+// time-indipendent K+ current
 
-	double ik,Gk1,rategk1;
+	double Ik1,Gk1,rategk1;
 	double k1ss,tauk1,rk1;
 	double *Tk1ss,*Ttauk1,*Trk1;
 
-} ik1;
+// Transient Outward Current (Ito)
+	double Ito,Gto;
+	double ass,taua,iss,taui;
+	double *Tass,*Ttaua,*Tiss,*Ttaui;
 
-// Sodium-Potassium Pump
-struct inakstruct {
+// Ultrarapid delayed rectifier K+ Current (Ito)
+	double Ikur,Gkur;
+	double ua_ss,tau_ua,ui_ss,tau_ui;
+	double *Tua_ss,*Ttau_ua,*Tui_ss,*Ttau_ui;
+	double *Tgkur;
 
+// Rapid activating potassium current (Ikr)
+	double Ikr,Gkr,rategkr;
+	double xrss,tauxr,rkr;
+	double *Txrss,*Ttau_xr,*Trkr;
+
+// Slowlactivating potassium current (Iks)
+	double Iks,Gks,rategks;
+	double xsss,tauxs;
+	double *Txsss,*Ttauxs;
+
+// L-type Calcium channel current (IcaL)
+	double Ical,GCaL,ECaL;
+	double dss,taud,fss,tauf,fcass,taufca;
+	double *Tdss,*Ttaud,*Tfss,*Ttauf;
+
+// Sodium-Potassium (NaK) Pump
 	double km_nai,km_ko;
 	double knai,knao,*Tknai,*Tknao;
-	double sigma,fnak,max,nak;
+	double sigma,fnak,GNaK,INaK;
 
-} inak;
-
-struct ncxstruct {
-
+// Sodium-Calcium exchanger (NCX)
 	double hca,hna;
 	double *Thca,*Thna;
-	double h1,h2,h3,h4;
-	double ksat,gamma;
+	double ncxh1,ncxh2,ncxh3,ncxh4;
+	double ksat,gm;
 	double kmna,kmca;
-	double j,max;
-
-} ncx;
-
-// Sarcolemmal Ca Pump
-struct ipcastruct {
-
-	double G,km,ca;
-
-} ipca;
+	double GNCX,INCX;
 
 // Na Background Current
-struct inabstruct {
-	double G,na;
-} inab;
-
-// K Background Current
-struct ikbstruct {
-	double G,k;
-} ikb;
+	double IbNa,Gnab;
 
 // Ca Background Current
-struct icabstruct {
-	double G,ca;
-} icab;
+	double IbCa,Gcab;
+
+// Sarcolemmal Ca Pump
+	double GpCa,Kmpca,IpCa;
 
 // SR calcium release flux, via RyR (Jrel)
-struct jrelstruct {
-
 	double uss,tauu,vss,tauv,wss,tauw;
 	double *Twss,*Ttauw;
-	double K,Fn;
+	double Krel,Fn,Jrel;
 	double CaMKss,tau_CaMK;
-	double pCaMK,ca;
-	double p;
-
-} jrel;
+	double pCaMK,relca;
+	double relp;
 
 // Calcium uptake via SERCA pump
-struct jupstruct {
-
-	double p,kup,caup_max;
-	double ca,leak;
-
-} jup;
-
-// Ca buffer
-struct bufstruct {
-
-	double ca_cmdn,ca_trpn,ca_csqn;
-	double b2,b3;
-
-} buf;
-
+	double Jup,Km_up,Jup_max;
+	double Jleak,Jleak_max,Caup_max;
 // Translocation of Ca Ions from NSR to JSR
-struct jtrstruct {
+	double Jtr,tau_tr;
 
-	double tau,ca;
-
-} jtr;
+// Ion concentration and Buffers
+	double cmdnmax,kmcmdn;
+	double trpnmax,kmtrpn;
+	double csqnmax,kmcsqn;
+	double buf_cmdn;
+	double buf_trpn;
+	double buf_csqn;
+	double B2,B3;
 
 void val_consts(FILE *);
-void make_ExPTable();
+void make_ExpTable(void);
 
-void eular(int n,double h,double x[],double t);
+//void eular(int n,double h,double x[],double t);
+void runge(int n,double h,double x[],double t);
 void function(double x[],double f[],double t);
 void input_para(FILE *);
 //void initial_mem(int tMAX);
-void initial_mem();
-void closed_mem();
+void initial_mem(void);
+void closed_mem(void);
 
 void eventloop(FILE *, int *mode, int *P, double m[]);
-void orbit(int *mode, double m[], double x2);
-void draw_p(int *mode, int P, double x[], double x2);
-void mouse(int *mode, double x[], double x2);
+void orbit(int *mode, double m[]);
+void draw_p(int *mode, int P, double x[]);
+void mouse(int *mode, double x[]);
 
 void data_out(FILE *, double t, double u[]);
 void out_ikr (FILE *, double time, double p[]);
@@ -268,6 +194,7 @@ void out_ical(FILE *, double time, double p[]);
 void out_inaca (FILE *f, double time, double p[]);
 void out_inak (FILE *f, double time, double p[]);
 void out_cicr (FILE *f, double time, double p[]);
+void current(FILE *,FILE *,FILE *,FILE *,FILE *,FILE *, double ttime, double x[]);
 
 void comp_reversal_potential(double x[]);
 void comp_ina(double x[]);
@@ -288,4 +215,4 @@ void comp_jup(double x[]);
 void comp_jtr (double x[]);
 void comp_concentration (double x[]);
 
-main(int argc,char **argv);
+//int main(int argc,char **argv);
