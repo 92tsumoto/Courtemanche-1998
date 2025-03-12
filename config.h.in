@@ -15,14 +15,14 @@
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
-/* Define to 1 if you have the `pthread' library (-lpthread). */
-#undef HAVE_LIBPTHREAD
-
 /* Define to 1 if you have the `X11' library (-lX11). */
 #undef HAVE_LIBX11
 
 /* Define to 1 if you have the <limits.h> header file. */
 #undef HAVE_LIMITS_H
+
+/* Define to 1 if you have the <mathimf.h> header file. */
+#undef HAVE_MATHIMF_H
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
@@ -71,9 +71,6 @@
 
 /* Define to 1 if the system has the type `_Bool'. */
 #undef HAVE__BOOL
-
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-#undef NO_MINUS_C_MINUS_O
 
 /* Name of package */
 #undef PACKAGE
