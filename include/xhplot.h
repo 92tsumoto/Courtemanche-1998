@@ -4,6 +4,7 @@
 #define	INIT_DRAW 0
 #define	REDRAW 1
 #define	PSET 2
+#define	PSET2 4
 #define	PRELINE 3
 #define	LINE 4
 #define	CLS 5
